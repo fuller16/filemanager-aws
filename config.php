@@ -2,6 +2,7 @@
 
 $use_auth = false;
 
+$app_url = 'https://onpoint.pinpoint.promo';
 
 $theme = 'light';
 // Readonly users

@@ -43,7 +43,7 @@ ini_set('max_execution_time', 0); // unlimited time
 // max upload file size
 define('MAX_UPLOAD_SIZE', $max_upload_size_bytes);
 
-define('FM_ROOT_URL', 'https://onpoint.pinpoint.promo/order_files');
+define('FM_ROOT_URL', $app_url . '/order_files');
 
 define('FM_THEME', $theme);
 // private key and session name to store to the session

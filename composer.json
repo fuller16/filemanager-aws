@@ -2,7 +2,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "hfig/mapi": "^1.1",
+        "hfig/mapi": "^1.4",
         "swiftmailer/swiftmailer": "^6.2"
     }
 }
