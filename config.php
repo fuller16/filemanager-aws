@@ -28,8 +28,8 @@ $default_timezone = 'Etc/UTC'; // UTC
 // Root path for file manager
 // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
 // $root_path = $_SERVER['DOCUMENT_ROOT'];
-$root_path = '/var/www/onpoint.pinpointnew/onpoint.pinpoint/public/order_files';
-$msg_path = '/home/pinpointdev/Dropbox/onpoint.pinpoint/public/order_files/';
+$root_path = '/var/www/html/staging-temp/public/order_files';
+$msg_path = '/var/www/html/staging-temp/public/order_files/';
 // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
 // Will not working if $root_path will be outside of server document root
 $root_url = '';

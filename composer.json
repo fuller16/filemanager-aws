@@ -3,6 +3,10 @@
     "prefer-stable": true,
     "require": {
         "hfig/mapi": "^1.4",
-        "swiftmailer/swiftmailer": "^6.2"
+        "swiftmailer/swiftmailer": "^6.3",
+        "ext-bcmath": "*",
+        "ext-mbstring": "*",
+        "pear/ole": "^1.0",
+        "php-mime-mail-parser/php-mime-mail-parser": "^8.0"
     }
 }

@@ -8,11 +8,11 @@ ini_set('max_execution_time', 0);
 // message parsing and file IO are kept separate
 $messageFactory = new MAPI\MapiMessageFactory();
 $documentFactory = new Pear\DocumentFactory(); 
-$decodelocation = '/home/pinpointdev/Dropbox/filemanager/attachments/';
+$decodelocation = '/var/www/html/filemanager/attachments/';
 $baseurl = 'http://filemanager.pinpoint.promo/attachments';
 $uniquefolder = uniqid();
-if (!is_dir('/home/pinpointdev/Dropbox/filemanager/attachments/'.$uniquefolder)){
-  mkdir('/home/pinpointdev/Dropbox/filemanager/attachments/'.$uniquefolder, 0777);
+if (!is_dir('/var/www/html/filemanager/attachments/'.$uniquefolder)){
+  mkdir('/var/www/html/filemanager/attachments/'.$uniquefolder, 0777);
 }
 // message parsing and file IO are kept separate
 function get_string_between($string, $start, $end){
@@ -30,12 +30,14 @@ try {
 	/*ini_set('display_errors', 1);
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);*/
+	
 	$ole = $documentFactory->createFromFile($file);
+	
 	$message = $messageFactory->parseMessage($ole);
 	$pattern = "(\£\d+)";
 	//$html = preg_replace_callback($pattern, "utf8replacer", utf8_encode($message->getBodyHTML()));
 	try {
-		$html = preg_replace_callback($pattern, "utf8replacer", utf8_encode($message->getBodyHTML()));
+		$html = utf8_encode($message->getBodyHTML()); // preg_replace_callback($pattern, "utf8replacer", utf8_encode($message->getBodyHTML()));
 	}catch(Exception $e) {
 		if($e->getMessage() == 'No HTML or Embedded RTF body. Convert from RTF not implemented'){
 			$html = preg_replace_callback($pattern, "utf8replacer", utf8_encode($message->getBody()));
@@ -74,7 +76,7 @@ try {
 
                 } else if($ext == 'msg') {
 
-                	$attachments[] = '<a target="_blank" href="/msgconvert.php?path=/home/pinpointdev/Dropbox/filemanager/attachments/'.$uniquefolder.'/'.$filename.'">' . $filename . '</a>';
+                	$attachments[] = '<a target="_blank" href="/msgconvert.php?path=/var/www/html/filemanager/attachments/'.$uniquefolder.'/'.$filename.'">' . $filename . '</a>';
 
 		        }else{
 		        	$attachments[] = '<a target="_blank" href="' . $fileurl . '">' . $filename . '</a>';

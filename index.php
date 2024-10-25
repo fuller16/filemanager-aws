@@ -181,7 +181,8 @@ if($ip_ruleset != 'OFF'){
 // Auth
 if ($use_auth) {
     
-    $mysqli = new mysqli("localhost","root","ppos_phpma","pinpoint_live");
+    // $mysqli = new mysqli("127.0.0.1","root","ppos_phpma","pinpoint_live", 3308);
+	$mysqli = new mysqli("onpoint-db.c1i0o2ko6h4g.eu-west-2.rds.amazonaws.com","admin","GCG1yB%}v<81<#q1G7!H2AGt-0:A","pinpoint_live");
 
     // Check connection
     if ($mysqli -> connect_errno) {
@@ -2119,7 +2120,10 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                                         $imagePreview = '/converteps.php?path=/order_files/'.FM_PATH.'/'.urlencode($f);
                                     } else if($ext == 'msg'){
                                         $imagePreview = '/msgconvert.php?path='.$msg_path.FM_PATH.'/'.urlencode($f);
-                                    } else {
+                                    } else if($ext == 'eml'){
+                                        $imagePreview = '/emlconvert.php?path='.$msg_path.FM_PATH.'/'.urlencode($f);
+                                    } 
+                                    else {
                                         $imagePreview = fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . rawurlencode($f));
                                     }
                                     /* if (in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), array('gif', 'jpg', 'jpeg', 'png', 'bmp', 'ico', 'svg'))): ?>
@@ -2228,7 +2232,16 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
  echo $msg_path.rawurlencode(FM_PATH).'/'.rawurlencode($f); ?>" target="iframe_a"><i class="fa fa-eye"></i></a>
 
                                 <?php
- } else { ?>
+ }else if($ext == 'eml'){ ?>
+
+    <a onclick="previewlink(this)" class="previewlink" title="<?php
+echo lng('Preview') ?>" href="/emlconvert.php?path=<?php
+echo $msg_path.rawurlencode(FM_PATH).'/'.rawurlencode($f); ?>" target="iframe_a"><i class="fa fa-eye"></i></a>
+
+<?php
+}
+ 
+ else { ?>
 
                                     <a onclick="previewlink(this)" class="previewlink" title="<?php
  echo lng('Preview') ?>" href="<?php
