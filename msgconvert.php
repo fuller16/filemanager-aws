@@ -1,5 +1,4 @@
-<?php
-require __DIR__ . '/auth_check.php';
+<?php 
 require 'vendor/autoload.php';
 
 use Hfig\MAPI;

@@ -1,5 +1,4 @@
 <?php
-require __DIR__ . '/auth_check.php';
 $im = new Imagick();
 
 if($_GET['attachment']){

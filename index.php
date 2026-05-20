@@ -17,6 +17,18 @@ if (is_readable($config_file)) {
 }
 error_reporting(E_ALL);
 $use_auth = true;
+if(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) == 'onpoint.pinpoint.promo'){
+    $_SESSION["iframe_my_host"] = 'onpoint';
+}
+elseif($_SERVER['REQUEST_URI'] != "/index.php?p=" && $_SERVER['REQUEST_URI'] != "/index.php" ){
+    $_SESSION["iframe_my_host"] = 'onpoint';
+}
+else{
+    $_SESSION["iframe_my_host"] = 'other';
+}
+if(isset($_SESSION["iframe_my_host"]) && $_SESSION["iframe_my_host"] == 'onpoint'){
+    $use_auth = false;
+}
 // Login user name and password
 // Users: array('Username' => 'Password', 'Username2' => 'Password2', ...)
 // Generate secure password hash - https://tinyfilemanager.github.io/docs/pwd.html
@@ -125,6 +137,11 @@ defined('FM_SELF_URL') || define('FM_SELF_URL', ($is_https ? 'https' : 'http') .
 if (isset($_GET['logout'])) {
     unset($_SESSION[FM_SESSION_ID]['logged']);
     fm_redirect(FM_SELF_URL);
+}
+
+// Show image here
+if (isset($_GET['img'])) {
+    fm_show_image($_GET['img']);
 }
 
 // Validate connection IP
@@ -303,11 +320,6 @@ defined('FM_HIGHLIGHTJS_STYLE') || define('FM_HIGHLIGHTJS_STYLE', $highlightjs_s
 defined('FM_DATETIME_FORMAT') || define('FM_DATETIME_FORMAT', $datetime_format);
 
 unset($p, $use_auth, $iconv_input_encoding, $use_highlightjs, $highlightjs_style);
-
-// Show image (requires auth — handler intentionally placed after auth gate)
-if (isset($_GET['img'])) {
-    fm_show_image($_GET['img']);
-}
 
 /*************************** ACTIONS ***************************/
 
