@@ -8,7 +8,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (empty($_SESSION['filemanager']['logged'])) {
+$fm_logged = !empty($_SESSION['filemanager']['logged']);
+$fm_iframe = isset($_SESSION['iframe_my_host']) && $_SESSION['iframe_my_host'] === 'onpoint';
+
+if (!$fm_logged && !$fm_iframe) {
     http_response_code(403);
     header('Content-Type: text/plain; charset=utf-8');
     echo 'Access denied. Authentication required.';

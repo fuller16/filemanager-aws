@@ -17,6 +17,13 @@ if (is_readable($config_file)) {
 }
 error_reporting(E_ALL);
 $use_auth = true;
+
+if (parse_url($_SERVER['HTTP_REFERER'] ?? '', PHP_URL_HOST) === 'onpoint.pinpoint.promo') {
+    $_SESSION['iframe_my_host'] = 'onpoint';
+}
+if (isset($_SESSION['iframe_my_host']) && $_SESSION['iframe_my_host'] === 'onpoint') {
+    $use_auth = false;
+}
 // Login user name and password
 // Users: array('Username' => 'Password', 'Username2' => 'Password2', ...)
 // Generate secure password hash - https://tinyfilemanager.github.io/docs/pwd.html
@@ -163,7 +170,7 @@ if($ip_ruleset != 'OFF'){
 
 // Auth
 if ($use_auth) {
-    
+
     // $mysqli = new mysqli("127.0.0.1","root","ppos_phpma","pinpoint_live", 3308);
 	$mysqli = new mysqli("onpoint-db.c1i0o2ko6h4g.eu-west-2.rds.amazonaws.com","admin","GCG1yB%}v<81<#q1G7!H2AGt-0:A","pinpoint_live");
 
@@ -332,15 +339,15 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
             fm_set_msg('File not found', 'error');
             fm_redirect(FM_SELF_URL . '?p=' . urlencode(FM_PATH));
         }
-        header('X-XSS-Protection:0'); 
+        header('X-XSS-Protection:0');
         $file_path = $path . '/' . $file;
-        
+
         $writedata = $_POST['content'];
         $fd = fopen($file_path, "w");
         //@fwrite($fd, $writedata);
         $write_results = @fwrite($fd, $writedata);
         fclose($fd);
-        if ($write_results === false){ 
+        if ($write_results === false){
             header("HTTP/1.1 500 Internal Server Error");
             die("Could Not Write File! - Check Permissions / Ownership");
         }
@@ -354,7 +361,7 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
         echo json_encode($response);
         exit();
     }
-    
+
     // backup files
     if (isset($_POST['type']) && $_POST['type'] == "backup") {
         $file = $_POST['file'];
@@ -434,7 +441,7 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
         $allowed = (FM_UPLOAD_EXTENSION) ? explode(',', FM_UPLOAD_EXTENSION) : false;
         $ext = strtolower(pathinfo($fileinfo->name, PATHINFO_EXTENSION));
         $isFileAllowed = ($allowed) ? in_array($ext, $allowed) : true;
-        
+
         function event_callback ($message) {
             global $callback;
             echo json_encode($message);
@@ -734,7 +741,7 @@ if (isset($_GET['dl'])) {
 // Upload
 if (!empty($_FILES) && !FM_READONLY) {
 
-    
+
 
     $override_file_name = false;
     $f = $_FILES;
@@ -1876,11 +1883,11 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
     <input type="hidden" name="group" value="1">
     <style type="text/css">
         .iframe-responsive,.table-responsive{
-           height: calc(100vh - 165px); overflow: auto; 
+           height: calc(100vh - 165px); overflow: auto;
         }
         .iframe-responsive iframe {
             height: calc(100vh - 210px);
-            overflow: auto; 
+            overflow: auto;
         }
     </style>
     <div class="row">
@@ -1991,7 +1998,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                             </td>
                             <td style="display: none;" data-sort="a-<?php
  echo $modif_raw;?>"><?php
- echo $modif ?></td>                                                                                                                           
+ echo $modif ?></td>
                             <?php
  if (!FM_IS_WIN && !$hide_Cols): ?>
                                 <td style="display: none;" ><?php
@@ -2096,7 +2103,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                                 </td><?php
  endif; ?>
                             <td>
-                                <div class="filename"> 
+                                <div class="filename">
                                     <?php
 
                                     if (in_array($ext, $doctypes)){
@@ -2110,7 +2117,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                                         $imagePreview = '/msgconvert.php?path='.$msg_path.FM_PATH.'/'.urlencode($f);
                                     } else if($ext == 'eml'){
                                         $imagePreview = '/emlconvert.php?path='.$msg_path.FM_PATH.'/'.urlencode($f);
-                                    } 
+                                    }
                                     else {
                                         $imagePreview = fm_enc(FM_ROOT_URL . (FM_PATH != '' ? '/' . FM_PATH : '') . '/' . rawurlencode($f));
                                     }
@@ -2130,8 +2137,8 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
  echo $imagePreview ?>" title="<?php
  echo $f ?>" target="iframe_a">
                                     <?php
- endif; */ 
-                                    ?> 
+ endif; */
+                                    ?>
                                     <a onclick="previewlink(this)" class="previewlink" href="<?php
  echo $imagePreview ?>?random=<?php echo rand() ?>" title="<?php
  echo $f ?>" target="iframe_a">
@@ -2177,7 +2184,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
  echo lng('Preview') ?>" href="<?php
  echo $filelink.'&quickView=1'; ?>" data-toggle="lightbox" data-gallery="tiny-gallery" data-title="<?php
  echo fm_convert_win($f) ?>" data-max-width="100%" data-width="100%"><i class="fa fa-eye"></i></a>
-                                
+
                                 <a style="display: none;" href="<?php
  echo $filelink.'&view='.$f; ?>" title="<?php
  echo lng('Preview') ?>"><i class="fa fa-eye"></i></a>
@@ -2189,7 +2196,7 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
                                 <a href="?p=<?php echo urlencode(trim(FM_PATH)) ?>&edit=<?php echo rawurlencode($f)?>" class="edit_text_file"><i class="fa fa-pencil" title="<?php
                              echo lng('Edit') ?>"></i></a>
                                 <?php
-                            } 
+                            }
 
 
  if (in_array($ext, $doctypes)){ ?>
@@ -2228,7 +2235,7 @@ echo $msg_path.rawurlencode(FM_PATH).'/'.rawurlencode($f); ?>" target="iframe_a"
 
 <?php
 }
- 
+
  else { ?>
 
                                     <a onclick="previewlink(this)" class="previewlink" title="<?php
@@ -2244,7 +2251,7 @@ echo $msg_path.rawurlencode(FM_PATH).'/'.rawurlencode($f); ?>" target="iframe_a"
  echo lng('Rename') ?>" href="#" onclick="rename('<?php
  echo fm_enc(FM_PATH) ?>', '<?php
  echo fm_enc(addslashes($f)) ?>');return false;"><i class="fa fa-pencil-square-o"></i></a>
-                                   
+
                                     <a title="<?php
  echo lng('CopyTo') ?>..."
                                        href="?p=<?php
@@ -2274,7 +2281,7 @@ echo $msg_path.rawurlencode(FM_PATH).'/'.rawurlencode($f); ?>" target="iframe_a"
 
                     if (empty($folders) && empty($files)) {
                         ?>
-                        <tfoot style="display: none;"> 
+                        <tfoot style="display: none;">
                             <tr><?php
  if (!FM_READONLY): ?>
                                     <td></td><?php
@@ -2288,7 +2295,7 @@ echo $msg_path.rawurlencode(FM_PATH).'/'.rawurlencode($f); ?>" target="iframe_a"
 
                     } else {
                         ?>
-                        <tfoot style="display: none;"> 
+                        <tfoot style="display: none;">
                             <tr><?php
  if (!FM_READONLY): ?>
                                     <td class="gray"></td><?php
@@ -2335,7 +2342,7 @@ echo $msg_path.rawurlencode(FM_PATH).'/'.rawurlencode($f); ?>" target="iframe_a"
  echo lng('UnSelectAll') ?> </a></li>
                 <li class="list-inline-item"><a href="#/invert-all" class="btn btn-small btn-outline-primary btn-2" onclick="invert_all();return false;"><i class="fa fa-th-list"></i> <?php
  echo lng('InvertSelection') ?> </a></li>
- 
+
                 <li class="list-inline-item"><input type="submit" class="hidden" name="zip" id="a-zip" value="zip">
                     <a href="javascript:document.getElementById('a-zip').click();" class="btn btn-small btn-outline-primary btn-2"><i class="fa fa-file-archive-o"></i> <?php
  echo lng('Zip') ?> </a></li>
@@ -2373,7 +2380,7 @@ echo $msg_path.rawurlencode(FM_PATH).'/'.rawurlencode($f); ?>" target="iframe_a"
  echo lng('Delete') ?> </a></li>
     <?php
   }
-  ?>  
+  ?>
             </ul>
         </div>
         <!-- <div class="col-3 d-none d-sm-block"><a href="https://onpoint.pinpoint.promo/" target="_blank" class="float-right text-muted"><?php
@@ -2725,7 +2732,7 @@ function fm_get_size($file)
     static $isdarwin;
     if (!isset($iswin)) {
         $iswin = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN');
-    } 
+    }
     if (!isset($isdarwin)) {
         $isdarwin = (strtoupper(substr(PHP_OS, 0)) == "DARWIN");
     }
@@ -3757,10 +3764,10 @@ global $lang, $root_url, $favicon_path;
         .fm-login-page .form-group label{ width:100%}
         .fm-login-page .btn.btn-block{ padding:12px 10px}
         .fm-login-page .footer{ margin:40px 0;color:#888;text-align:center}
-        @media screen and (max-width:425px){ 
+        @media screen and (max-width:425px){
             .fm-login-page .card-wrapper{ width:90%;margin:0 auto;margin-top:10%;}
         }
-        @media screen and (max-width:320px){ 
+        @media screen and (max-width:320px){
             .fm-login-page .card.fat{ padding:0}
             .fm-login-page .card.fat .card-body{ padding:15px}
         }
@@ -3876,7 +3883,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         .break-word + .float-right { padding-right:30px;position:relative  }
         .break-word + .float-right > a { color:#7d7d7d;font-size:1.2em;margin-right:4px  }
         #editor { position:absolute;right:15px;top:100px;bottom:15px;left:15px  }
-        @media (max-width:481px) { 
+        @media (max-width:481px) {
             #editor { top:150px; }
         }
         #normal-editor { border-radius:3px;border-width:2px;padding:10px;outline:none; }
@@ -4132,7 +4139,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
         if (n) {
             if(true){
                 var data = {ajax: true, content: n, type: 'save'};
-                
+
                 $.ajax({
                     type: "POST",
                     url: window.location,
@@ -4146,7 +4153,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
                     failure: function(mes) {toast("Error: try again");},
                     error: function(mes) {toast(`<p style="background-color:red">${mes.responseText}</p>`);}
                 });
-                
+
             }
             else{
                 var a = document.createElement("form");
@@ -4293,7 +4300,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
     });
 </script>
 <?php
- if (isset($_GET['edit']) && isset($_GET['env']) && FM_EDIT_FILE): 
+ if (isset($_GET['edit']) && isset($_GET['env']) && FM_EDIT_FILE):
         $ext = "javascript";
         $ext = pathinfo($_GET["edit"], PATHINFO_EXTENSION);
         ?>
@@ -4346,7 +4353,7 @@ $isStickyNavBar = $sticky_navbar ? 'navbar-fixed' : 'navbar-normal';
                 } else if(selectedValue && selectionType == "theme") {
                     editor.setTheme(selectedValue);
                 }else if(selectedValue && selectionType == "fontSize") {
-                    editor.setFontSize(parseInt(selectedValue)); 
+                    editor.setFontSize(parseInt(selectedValue));
                 }
             });
         });
@@ -4447,7 +4454,7 @@ function lng($txt) {
     $tr['en']['Check Latest Version'] = 'Check Latest Version';$tr['en']['Generate new password hash'] = 'Generate new password hash';
     $tr['en']['You are logged in']    = 'You are logged in'; $tr['en']['Login failed. Invalid username or password'] = 'Login failed. Invalid username or password';
     $tr['en']['password_hash not supported, Upgrade PHP version'] = 'password_hash not supported, Upgrade PHP version';
-    
+
     $i18n = fm_get_translations($tr);
     $tr = $i18n ? $i18n : $tr;
 
