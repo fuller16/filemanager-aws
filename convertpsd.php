@@ -1,12 +1,14 @@
 <?php
+require __DIR__ . '/auth_check.php';
+require __DIR__ . '/config.php';
 $im = new Imagick();
 
 if($_GET['attachment']){
 	$filename = $_GET['attachment'];
-	$im->readImage("/home/pinpointdev/Dropbox/filemanager/".$filename);
+	$im->readImage(rtrim($imagick_attachments_root, '/') . '/' . $filename);
 }else{
 	$filename = $_GET['path'];
-	$im->readImage("/home/pinpointdev/Dropbox/onpoint.pinpoint/public".$filename);
+	$im->readImage(rtrim($imagick_public_root, '/') . $filename);
 }
 
 

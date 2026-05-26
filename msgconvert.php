@@ -1,4 +1,6 @@
-<?php 
+<?php
+require __DIR__ . '/auth_check.php';
+require __DIR__ . '/config.php';
 require 'vendor/autoload.php';
 
 use Hfig\MAPI;
@@ -7,12 +9,12 @@ ini_set('max_execution_time', 0);
 
 // message parsing and file IO are kept separate
 $messageFactory = new MAPI\MapiMessageFactory();
-$documentFactory = new Pear\DocumentFactory(); 
-$decodelocation = '/var/www/html/filemanager/attachments/';
-$baseurl = 'http://filemanager.pinpoint.promo/attachments';
+$documentFactory = new Pear\DocumentFactory();
+$decodelocation = rtrim($attachments_path, '/') . '/';
+$baseurl = rtrim($attachments_url, '/');
 $uniquefolder = uniqid();
-if (!is_dir('/var/www/html/filemanager/attachments/'.$uniquefolder)){
-  mkdir('/var/www/html/filemanager/attachments/'.$uniquefolder, 0777);
+if (!is_dir($decodelocation . $uniquefolder)){
+  mkdir($decodelocation . $uniquefolder, 0777);
 }
 // message parsing and file IO are kept separate
 function get_string_between($string, $start, $end){
@@ -76,7 +78,7 @@ try {
 
                 } else if($ext == 'msg') {
 
-                	$attachments[] = '<a target="_blank" href="/msgconvert.php?path=/var/www/html/filemanager/attachments/'.$uniquefolder.'/'.$filename.'">' . $filename . '</a>';
+                	$attachments[] = '<a target="_blank" href="/msgconvert.php?path='.$decodelocation.$uniquefolder.'/'.$filename.'">' . $filename . '</a>';
 
 		        }else{
 		        	$attachments[] = '<a target="_blank" href="' . $fileurl . '">' . $filename . '</a>';

@@ -1,8 +1,32 @@
 <?php
 
+require_once __DIR__ . '/env.php';
+fm_load_env(__DIR__ . '/.env');
+
 $use_auth = false;
 
-$app_url = 'https://onpoint.pinpoint.promo';
+$app_url = env('APP_URL', 'https://onpoint.pinpoint.promo');
+
+// Host allowed to embed filemanager in an iframe (referer check + auth bypass)
+$allowed_referer_host = env('ALLOWED_REFERER_HOST', 'onpoint.pinpoint.promo');
+
+// Brand logo shown on the login screen
+$brand_logo_url = env('BRAND_LOGO_URL', 'https://onpoint.pinpoint.promo/crm/dist/img/orange-logo.png');
+
+// Database connection (used by index.php auth)
+$db_host = env('DB_HOST', 'onpoint-db.c1i0o2ko6h4g.eu-west-2.rds.amazonaws.com');
+$db_user = env('DB_USER', 'admin');
+$db_pass = env('DB_PASS', 'GCG1yB%}v<81<#q1G7!H2AGt-0:A');
+$db_name = env('DB_NAME', 'pinpoint_live');
+$db_port = env('DB_PORT', null);
+
+// Attachments storage used by msg/eml converters
+$attachments_path = env('ATTACHMENTS_PATH', '/var/www/html/filemanager/attachments');
+$attachments_url = env('ATTACHMENTS_URL', 'http://filemanager.pinpoint.promo/attachments');
+
+// Source roots used by converteps.php / convertpsd.php
+$imagick_attachments_root = env('IMAGICK_ATTACHMENTS_ROOT', '/home/pinpointdev/Dropbox/filemanager/');
+$imagick_public_root = env('IMAGICK_PUBLIC_ROOT', '/home/pinpointdev/Dropbox/onpoint.pinpoint/public');
 
 $theme = 'light';
 // Readonly users
@@ -28,8 +52,8 @@ $default_timezone = 'Etc/UTC'; // UTC
 // Root path for file manager
 // use absolute path of directory i.e: '/var/www/folder' or $_SERVER['DOCUMENT_ROOT'].'/folder'
 // $root_path = $_SERVER['DOCUMENT_ROOT'];
-$root_path = '/var/www/html/staging-temp/public/order_files';
-$msg_path = '/var/www/html/staging-temp/public/order_files/';
+$root_path = env('ROOT_PATH', '/var/www/html/staging-temp/public/order_files');
+$msg_path = env('MSG_PATH', '/var/www/html/staging-temp/public/order_files/');
 // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
 // Will not working if $root_path will be outside of server document root
 $root_url = '';

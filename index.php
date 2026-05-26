@@ -17,7 +17,7 @@ if (is_readable($config_file)) {
 }
 error_reporting(E_ALL);
 $use_auth = true;
-if(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) == 'onpoint.pinpoint.promo'){
+if(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) == $allowed_referer_host){
     $_SESSION["iframe_my_host"] = 'onpoint';
 }
 elseif($_SERVER['REQUEST_URI'] != "/index.php?p=" && $_SERVER['REQUEST_URI'] != "/index.php" ){
@@ -139,11 +139,6 @@ if (isset($_GET['logout'])) {
     fm_redirect(FM_SELF_URL);
 }
 
-// Show image here
-if (isset($_GET['img'])) {
-    fm_show_image($_GET['img']);
-}
-
 // Validate connection IP
 if($ip_ruleset != 'OFF'){
     $clientIp = $_SERVER['REMOTE_ADDR'];
@@ -181,8 +176,9 @@ if($ip_ruleset != 'OFF'){
 // Auth
 if ($use_auth) {
     
-    // $mysqli = new mysqli("127.0.0.1","root","ppos_phpma","pinpoint_live", 3308);
-	$mysqli = new mysqli("onpoint-db.c1i0o2ko6h4g.eu-west-2.rds.amazonaws.com","admin","GCG1yB%}v<81<#q1G7!H2AGt-0:A","pinpoint_live");
+    $mysqli = !empty($db_port)
+        ? new mysqli($db_host, $db_user, $db_pass, $db_name, (int) $db_port)
+        : new mysqli($db_host, $db_user, $db_pass, $db_name);
 
     // Check connection
     if ($mysqli -> connect_errno) {
@@ -226,7 +222,7 @@ if ($use_auth) {
                                 <form class="form-signin" action="" method="post" autocomplete="off">
                                     <div class="form-group">
                                        <div class="brand">
-                                            <img src="https://onpoint.pinpoint.promo/crm/dist/img/orange-logo.png">
+                                            <img src="<?php echo htmlspecialchars($brand_logo_url, ENT_QUOTES); ?>">
                                         </div>
                                         <div class="text-center">
                                             <h1 class="card-title"><?php
@@ -320,6 +316,11 @@ defined('FM_HIGHLIGHTJS_STYLE') || define('FM_HIGHLIGHTJS_STYLE', $highlightjs_s
 defined('FM_DATETIME_FORMAT') || define('FM_DATETIME_FORMAT', $datetime_format);
 
 unset($p, $use_auth, $iconv_input_encoding, $use_highlightjs, $highlightjs_style);
+
+// Show image (requires auth — handler intentionally placed after the auth gate)
+if (isset($_GET['img'])) {
+    fm_show_image($_GET['img']);
+}
 
 /*************************** ACTIONS ***************************/
 

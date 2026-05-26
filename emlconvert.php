@@ -1,4 +1,6 @@
-<?php 
+<?php
+require __DIR__ . '/auth_check.php';
+require __DIR__ . '/config.php';
 require 'vendor/autoload.php';
 use PhpMimeMailParser\Parser;
 
@@ -6,11 +8,11 @@ ini_set('max_execution_time', 0);
 
 // message parsing and file IO are kept separate
 $parser = new Parser();
-$decodelocation = '/var/www/html/filemanager/attachments/';
-$baseurl = 'http://filemanager.pinpoint.promo/attachments';
+$decodelocation = rtrim($attachments_path, '/') . '/';
+$baseurl = rtrim($attachments_url, '/');
 $uniquefolder = uniqid();
-if (!is_dir('/var/www/html/filemanager/attachments/'.$uniquefolder)){
-  mkdir('/var/www/html/filemanager/attachments/'.$uniquefolder, 0777);
+if (!is_dir($decodelocation . $uniquefolder)){
+  mkdir($decodelocation . $uniquefolder, 0777);
 }
 
 try {
