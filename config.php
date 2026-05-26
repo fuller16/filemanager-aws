@@ -13,12 +13,14 @@ $allowed_referer_host = env('ALLOWED_REFERER_HOST', 'onpoint.pinpoint.promo');
 // Brand logo shown on the login screen
 $brand_logo_url = env('BRAND_LOGO_URL', 'https://onpoint.pinpoint.promo/crm/dist/img/orange-logo.png');
 
-// Database connection (used by index.php auth)
-$db_host = env('DB_HOST', 'onpoint-db.c1i0o2ko6h4g.eu-west-2.rds.amazonaws.com');
-$db_user = env('DB_USER', 'admin');
-$db_pass = env('DB_PASS', 'GCG1yB%}v<81<#q1G7!H2AGt-0:A');
-$db_name = env('DB_NAME', 'pinpoint_live');
-$db_port = env('DB_PORT', null);
+// Database connection (used by index.php auth).
+// No defaults — credentials must be set in .env. Missing values are
+// caught with a clear error in index.php before mysqli is constructed.
+$db_host = env('DB_HOST');
+$db_user = env('DB_USER');
+$db_pass = env('DB_PASS');
+$db_name = env('DB_NAME');
+$db_port = env('DB_PORT');
 
 // Attachments storage used by msg/eml converters
 $attachments_path = env('ATTACHMENTS_PATH', '/var/www/html/filemanager/attachments');

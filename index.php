@@ -17,7 +17,7 @@ if (is_readable($config_file)) {
 }
 error_reporting(E_ALL);
 $use_auth = true;
-if(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) == $allowed_referer_host){
+if(parse_url($_SERVER['HTTP_REFERER'] ?? '', PHP_URL_HOST) == $allowed_referer_host){
     $_SESSION["iframe_my_host"] = 'onpoint';
 }
 elseif($_SERVER['REQUEST_URI'] != "/index.php?p=" && $_SERVER['REQUEST_URI'] != "/index.php" ){
@@ -175,7 +175,14 @@ if($ip_ruleset != 'OFF'){
 
 // Auth
 if ($use_auth) {
-    
+
+    if (empty($db_host) || empty($db_user) || empty($db_name)) {
+        http_response_code(500);
+        header('Content-Type: text/plain; charset=utf-8');
+        echo 'Configuration error: DB credentials are not set. Create .env from .env.example.';
+        exit;
+    }
+
     $mysqli = !empty($db_port)
         ? new mysqli($db_host, $db_user, $db_pass, $db_name, (int) $db_port)
         : new mysqli($db_host, $db_user, $db_pass, $db_name);
