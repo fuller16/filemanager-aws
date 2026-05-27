@@ -17,16 +17,10 @@ if (is_readable($config_file)) {
 }
 error_reporting(E_ALL);
 $use_auth = true;
-if(parse_url($_SERVER['HTTP_REFERER'] ?? '', PHP_URL_HOST) == $allowed_referer_host){
-    $_SESSION["iframe_my_host"] = 'onpoint';
+if (parse_url($_SERVER['HTTP_REFERER'] ?? '', PHP_URL_HOST) === $allowed_referer_host) {
+    $_SESSION['iframe_my_host'] = 'onpoint';
 }
-elseif($_SERVER['REQUEST_URI'] != "/index.php?p=" && $_SERVER['REQUEST_URI'] != "/index.php" ){
-    $_SESSION["iframe_my_host"] = 'onpoint';
-}
-else{
-    $_SESSION["iframe_my_host"] = 'other';
-}
-if(isset($_SESSION["iframe_my_host"]) && $_SESSION["iframe_my_host"] == 'onpoint'){
+if (isset($_SESSION['iframe_my_host']) && $_SESSION['iframe_my_host'] === 'onpoint') {
     $use_auth = false;
 }
 // Login user name and password
